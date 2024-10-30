@@ -115,13 +115,15 @@ class RegistryCredentialStoreAccess(Signature):
     ttps = ["T1003"]  # MITRE v6,7,8
     ttps += ["T1003.002"]  # MITRE v7,8
     mbcs = ["OB0005"]
+    confidence = 10
 
     def run(self):
         ret = False
-        reg_indicators = (
-            r"HKEY_LOCAL_MACHINE\\SAM$",
-            r"HKEY_LOCAL_MACHINE\\SYSTEM$",
-        )
+        reg_indicators = [
+            # Focus on specific subkeys within the hives
+            r"HKEY_LOCAL_MACHINE\\SAM\\SAM",
+            r"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Lsa",
+        ]
 
         for indicator in reg_indicators:
             match = self.check_key(pattern=indicator, regex=True)

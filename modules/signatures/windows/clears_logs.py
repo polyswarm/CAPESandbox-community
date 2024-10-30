@@ -33,7 +33,7 @@ class ClearsLogs(Signature):
 
     def run(self):
         file_indicators = [
-            ".*\\\\Windows\\\\Logs.*",
+            ".*\\\\Windows\\\\Logs\\\\(?!WindowsUpdate).*\\$"
             ".*\\\\inetpub\\\\logs\\\\LogFiles.*",
             ".*\\\\Windows\\\\System32\\\\Winevt.*",
             ".*\.etl$",
@@ -53,6 +53,6 @@ class ClearsLogs(Signature):
             if match_file:
                 for match in match_file:
                     self.data.append({"file": match})
-                ret = True
+                    ret = True
 
         return ret
