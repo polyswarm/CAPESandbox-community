@@ -25,15 +25,16 @@ class CryptGenKey(Signature):
     authors = ["Kevin Ross", "@CybercentreCanada"]
     minimum = "1.2"
     evented = True
+    confidence = 40
 
     filter_apinames = set(["CryptGenKey", "CryptExportKey"])
 
     def __init__(self, *args, **kwargs):
         Signature.__init__(self, *args, **kwargs)
-        self.process_safelist = ["powershell.exe"]
+        self.process_safelist = ["powershell.exe", "winword.exe"]
 
     def on_call(self, _, process):
-        if process["process_name"] in self.process_safelist:
+        if process.get("process_name", "").lower() in self.process_safelist:
             return False
         if self.pid:
             self.mark_call()

@@ -35,6 +35,22 @@ class RansomwareFileModifications(Signature):
     mbcs = ["OB0008", "E1486"]
 
     filter_apinames = set(["MoveFileWithProgressW", "MoveFileWithProgressTransactedW", "NtCreateFile", "NtWriteFile"])
+    whitelist = [
+        "svchost.exe",
+        "services.exe",
+        "acrobat.exe",
+        "explorer.exe",
+        "microsoftedgeupdate.exe",
+        "werfault.exe",
+        "taskhostw.exe",
+        "mousocoreworker.exe",
+        "adobecollabsync.exe",
+        "trustedinstaller.exe",
+        "adobe crash processor.exe",
+    ]
+    whitelist_regex = [
+        r"microsoftedgeupdatesetup_x86"
+    ]
 
     def __init__(self, *args, **kwargs):
         Signature.__init__(self, *args, **kwargs)
@@ -46,6 +62,12 @@ class RansomwareFileModifications(Signature):
         self.handles = []
 
     def on_call(self, call, process):
+        pname = process["process_name"].lower()
+        if pname.lower() in self.whitelist:
+            return
+        for entry in self.whitelist_regex:
+            if re.match(entry, pname, re.IGNORECASE):
+                return
         if not call["status"]:
             return None
         if call["api"].startswith("MoveFileWithProgress"):
@@ -112,6 +134,8 @@ class RansomwareFileModifications(Signature):
                 and "\\temporary internet files\\" not in deletedfile.lower()
                 and "\\cache" not in deletedfile.lower()
                 and "\\inetcache" not in deletedfile.lower()
+                and "\\tasks" not in deletedfile.lower()
+                and "edgeupdate" not in deletedfile.lower()
                 and not deletedfile.lower().endswith(".tmp")
             ):
                 self.data.append({"file": deletedfile})
