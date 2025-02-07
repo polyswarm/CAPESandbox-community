@@ -36,6 +36,9 @@ class ClearsLogs(Signature):
             ".*\\\\Windows\\\\Logs\\\\(?!WindowsUpdate).*\\$"
             ".*\\\\inetpub\\\\logs\\\\LogFiles.*",
             ".*\\\\Windows\\\\System32\\\\Winevt.*",
+            r".*\\Windows\\Logs.*",
+            r".*\\inetpub\\logs\\LogFiles.*",
+            r".*\\Windows\\System32\\Winevt.*",
             ".*\.etl$",
             ".*\.evt$",
             ".*\.evtx$",

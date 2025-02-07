@@ -111,7 +111,7 @@ class LOLBAS_IndirectCommandExecutionViaConsoleWindowHost(Signature):
         cmdlines = self.results.get("behavior", {}).get("summary", {}).get("executed_commands", [])
         for cmdline in cmdlines:
             lower = cmdline.lower()
-            if any(process in lower for process in ("cmd /c", "powershell", "script", "mshta", "curl")):
+            if "conhost.exe" in lower and any(process in lower for process in ("cmd /c", "powershell", "script", "mshta", "curl")):
                 self.data.append({"command": cmdline})
                 return True
         return False
@@ -481,7 +481,7 @@ class LOLBAS_ExecuteBinaryViaInternetExplorerExporter(Signature):
     def __init__(self, *args, **kwargs):
         Signature.__init__(self, *args, **kwargs)
         self.detected = False
-        self.blacklistedNames = ["mozcrt19.dll", "mozsqlite3.dll", "sqlite3.dll"]
+        self.blacklistedNames = ("mozcrt19.dll", "mozsqlite3.dll", "sqlite3.dll")
         self.whitelistedDirectories = [
             "\\program files (x86)\\",
             "\\program files\\",
@@ -564,6 +564,110 @@ class LOLBAS_ExecuteSuspiciousPowerShellViaRunscripthelper(Signature):
             lower = cmdline.lower()
             argumentCount = lower.split()
             if "runscripthelper.exe" in lower and "surfacecheck" and (len(argumentCount) - 1) > 3:
+                self.data.append({"command": cmdline})
+                return True
+
+        return False
+
+
+class LOLBAS_ExecuteBinaryViaPcalua(Signature):
+    name = "execute_binary_via_pcalua"
+    description = "Attempts to execute a binary using Microsoft Program Compatibility Assistant binary"
+    severity = 3
+    categories = ["bypass", "execution"]
+    authors = ["@para0x0dise"]
+    minimum = "1.2"
+    ttps = ["T1218"]
+    references = ["https://lolbas-project.github.io/lolbas/Binaries/Pcalua/"]
+    evented = True
+
+    def run(self):
+        cmdlines = self.results.get("behavior", {}).get("summary", {}).get("executed_commands", [])
+        for cmdline in cmdlines:
+            lower = cmdline.lower()
+            if "pcalua.exe" in lower and "-a" in lower and not "-d" in lower:
+                self.data.append({"command": cmdline})
+                return True
+
+        return False
+
+
+class LOLBAS_ExecuteBinaryViaCDB(Signature):
+    name = "execute_binary_via_pcalua"
+    description = "Attempts to execute a binary using Microsoft Windows Debugging utility cdb.exe"
+    severity = 3
+    categories = ["bypass", "execution"]
+    authors = ["@para0x0dise"]
+    minimum = "1.2"
+    ttps = ["T1218"]
+    references = ["https://lolbas-project.github.io/lolbas/OtherMSBinaries/Cdb/"]
+    evented = True
+
+    def run(self):
+        cmdlines = self.results.get("behavior", {}).get("summary", {}).get("executed_commands", [])
+        for cmdline in cmdlines:
+            lower = cmdline.lower()
+            if "cdb.exe" in lower and any(arg in lower for arg in ("-cf", "-c", "-pd")):
+                self.data.append({"command": cmdline})
+                return True
+
+        return False
+
+
+class LOLBAS_ExecutePSViaSyncappvpublishingserver(Signature):
+    name = "execute_ps_via_syncappvpublishingserver"
+    description = "Attempts to execute a PowerShell commands via Microsoft signed Visual Basic script (Syncappvpublishingserver)"
+    severity = 3
+    categories = ["bypass", "execution"]
+    authors = ["@para0x0dise"]
+    minimum = "1.2"
+    ttps = ["T1059.003"]
+    references = ["https://lolbas-project.github.io/lolbas/Scripts/Syncappvpublishingserver/"]
+    evented = True
+
+    filter_apinames = set(["CreateProcessInternalW"])
+
+    def __init__(self, *args, **kwargs):
+        Signature.__init__(self, *args, **kwargs)
+        self.sus = False
+        self.mal = False
+
+    def on_call(self, call, _):
+        if call["api"] == "CreateProcessInternalW":
+            cmdline = self.get_argument(call, "CommandLine")
+            lower = cmdline.lower()
+            if "syncappvpublishingserver" in lower and ("n;" in lower or "break;" in lower):
+                if self.pid:
+                    self.mark_call()
+                self.sus = True
+
+            if "powershell.exe" in lower:
+                if self.pid:
+                    self.mark_call()
+                self.mal = True
+
+    def on_complete(self):
+        if self.mal and self.sus:
+            return True
+        return False
+
+
+class LOLBAS_ExecuteRemoteMSIViaDevinit(Signature):
+    name = "execute_remote_msi"
+    description = "Attempts to download and execute a remote msi file via Visual Studio tool (devinit.exe)"
+    severity = 3
+    categories = ["bypass", "execution"]
+    authors = ["@para0x0dise"]
+    minimum = "1.2"
+    ttps = ["T1218"]
+    references = ["https://lolbas-project.github.io/lolbas/OtherMSBinaries/Devinit/"]
+    evented = True
+
+    def run(self):
+        cmdlines = self.results.get("behavior", {}).get("summary", {}).get("executed_commands", [])
+        for cmdline in cmdlines:
+            lower = cmdline.lower()
+            if "devinit" in lower and "msi-install" in lower and "http" in lower and ".msi" in lower:
                 self.data.append({"command": cmdline})
                 return True
 
