@@ -439,7 +439,6 @@ class StoreExecutableRegistry(Signature):
 
     def on_call(self, call, process):
         if call["api"] in ("RegSetValueExA", "RegSetValueExW", "NtSetValueKey"):
-            buf = self.get_argument(call, "Buffer")
             valueName = self.get_argument(call, "ValueName")
             bufLen = self.get_argument(call, "BufferLength")
 
@@ -447,7 +446,8 @@ class StoreExecutableRegistry(Signature):
                 "\\Program Files (x86)\\Schneider Electric\\Software Update\\SoftwareUpdate.exe" in process["module_path"]
                 and valueName == "FusTMP"
             ):
-                if buf.startswith("MZ\\x90\\x00") and int(bufLen) >= 100:
+                buf = self.get_argument(call, "Buffer")
+                if buf and buf.startswith("MZ\\x90\\x00") and int(bufLen) >= 100:
                     if self.pid:
                         self.mark_call()
                     self.detected = True
@@ -575,7 +575,7 @@ class IPAddressDiscoveryViaTrustedProgram(Signature):
         )
 
     def on_call(self, call, process):
-        if any(proc in process["process_name"].lower() for proc in self.trusted):
+        if any(proc in process["process_name"].lower() for proc in self.trustedNames):
             if call["api"] == "InternetOpenUrlA":
                 url = self.get_argument(call, "URL")
                 if url:
@@ -1088,11 +1088,10 @@ class NetworkConnectionViaSuspiciousProcess(Signature):
     def on_call(self, call, process):
         if call["status"] and any(proc in process["process_name"] for proc in self.blacklisterProcesses):
             self.detected = True
+            self.data.append({"suspicious_process": process["process_name"]})
 
     def on_complete(self):
-        if self.detected:
-            return True
-        return False
+        return self.detected
 
 
 class SuspiciousExecutionViaDotnetRemoting(Signature):
