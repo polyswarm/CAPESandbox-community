@@ -351,18 +351,22 @@ rule INDICATOR_SUSPICIOUS_EXE_SQLQuery_ConfidentialDataStore {
         $column4 = "card_number_encrypted" ascii wide nocase
         $column5 = "isHttpOnly" ascii wide nocase
 
-        // Combined strings for stronger indicators
         $s1 = "select * from credit_cards" ascii wide nocase
         $s2 = "select * from logins" ascii wide nocase
         $s3 = "select * from cookies" ascii wide nocase
         $s4 = "select name, password_value" ascii wide nocase
         $s5 = "select encrypted_value from moz_cookies" ascii wide nocase
         $s6 = "select card_number_encrypted from credit_cards" ascii wide nocase
+        $s7 = "select password_value from logins" ascii wide nocase
+        $s8 = "select name from moz_logins" ascii wide nocase
 
     condition:
         uint16(0) == 0x5a4d and (
-            ($select and 2 of ($table*) and 2 of ($column*)) or // Original logic, but now with more focused combinations below
-            3 of ($s*) // At least three of the strong indicators must be present
+            3 of ($s*) or // Prioritize specific, strong indicators
+            (
+                $select and $from and
+                (2 of ($table*) and 2 of ($column*))
+            )
         )
 }
 
