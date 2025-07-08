@@ -53,8 +53,8 @@ class ReadsMemoryRemoteProcess(Signature):
                     )
                     self.sourcepids.append(processid)
                     self.targethandles.append(prochandle)
-                self.mark_call()
-                self.ret = True
+                    self.mark_call()
+                    self.ret = True
 
     def on_complete(self):
         return self.ret
