@@ -26,7 +26,8 @@ class ReadsMemoryRemoteProcess(Signature):
     evented = True
 
     filter_apinames = set(["ReadProcessMemory"])
-    safeproclist = ["explorer.exe", "adobe crash processor.exe", "Acrobat.exe", "CRWindowsClientService.exe"]
+    safeproclist = ["explorer.exe", "adobe crash processor.exe", "Acrobat.exe", "CRWindowsClientService.exe",
+                    "adnotificationmanager.exe"]
 
     def __init__(self, *args, **kwargs):
         Signature.__init__(self, *args, **kwargs)
