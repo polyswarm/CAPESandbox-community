@@ -365,7 +365,7 @@ rule INDICATOR_SUSPICIOUS_EXE_SQLQuery_ConfidentialDataStore {
             3 of ($s*) or // Prioritize specific, strong indicators
             (
                 $select and $from and
-                (2 of ($table*) and 2 of ($column*))
+                (3 of ($table*) and 3 of ($column*))
             )
         )
 }
