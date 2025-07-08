@@ -29,6 +29,7 @@ class StealthTimeout(Signature):
         "adobecollabsync.exe",
         "trustedinstaller.exe",
         "adobe crash processor.exe"
+        "acrocef.exe",
     ]
 
     filter_apinames = set(
