@@ -29,11 +29,11 @@ class DeletesExecutedFiles(Signature):
     evented = True
 
     def run(self):
-        cmdlines = self.results["behavior"]["summary"]["executed_commands"]
+        cmdlines = self.results.get("behavior", {}).get("summary", {}).get("executed_commands", [])
         whitelist_paths = ["C:\\Program Files (x86)\\Microsoft\\Temp"]
 
         if cmdlines:
-            for deletedfile in self.results["behavior"]["summary"]["delete_files"]:
+            for deletedfile in self.results.get("behavior", {}).get("summary", {}).get("delete_files", []):
                 if any(deletedfile in cmdline for cmdline in cmdlines):
                     safe = False
                     for path in whitelist_paths:
