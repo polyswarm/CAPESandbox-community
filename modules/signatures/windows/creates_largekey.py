@@ -20,7 +20,7 @@ class CreatesLargeKey(Signature):
     name = "creates_largekey"
     description = "Creates or sets a registry key to a long series of bytes, possibly to store a binary or malware config"
     severity = 3
-    confidence = 80
+    confidence = 30
     categories = ["stealth"]
     authors = ["Optiv"]
     minimum = "1.3"
@@ -35,8 +35,23 @@ class CreatesLargeKey(Signature):
         Signature.__init__(self, *args, **kwargs)
         self.saw_large = False
         self.regkeyvals = set()
+        self.process_safelist = [
+            "svchost.exe",
+            "services.exe",
+            "acrobat.exe",
+            "explorer.exe",
+            "microsoftedgeupdate.exe",
+            "werfault.exe",
+            "taskhostw.exe",
+            "mousocoreworker.exe",
+            "adobecollabsync.exe",
+            "trustedinstaller.exe",
+            "adobe crash processor.exe"
+        ]
 
     def on_call(self, call, process):
+        if process.get("process_name", "").lower() in self.process_safelist:
+            return False
         vallen = self.get_argument(call, "BufferLength")
         if vallen:
             length = int(vallen)

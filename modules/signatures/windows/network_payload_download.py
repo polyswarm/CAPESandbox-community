@@ -29,6 +29,7 @@ class NetworkDocumentFile(Signature):
     ttps = ["T1071"]
     mbcs = ["E1105"]
     evented = True
+    confidence = 30
 
     filter_apinames = set(
         [
@@ -66,9 +67,9 @@ class NetworkDocumentFile(Signature):
                     self.url = self.get_argument(call, "Url")
                     if self.url in domain_passlist:
                         return False
-                else:
-                    self.mark_call()
-                    return True
+                    else:
+                        self.mark_call()
+                        return True
 
 
 class NetworkEXE(Signature):

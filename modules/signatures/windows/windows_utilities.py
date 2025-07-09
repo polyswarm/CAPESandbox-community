@@ -113,6 +113,10 @@ class UsesWindowsUtilities(Signature):
         ]
         whitelist = [
             r"Internet Explorer",
+            r"Adobe",
+            r"Acrobat",
+            r"Edge",
+            r"system32",
         ]
         ret = False
         for cmdline in self.results.get("behavior", {}).get("summary", {}).get("executed_commands", []):
@@ -138,7 +142,7 @@ class SuspiciousCommandTools(Signature):
     name = "suspicious_command_tools"
     description = "Uses suspicious command line tools or Windows utilities"
     severity = 3
-    confidence = 80
+    confidence = 50
     categories = ["command", "lateral"]
     authors = ["Cuckoo Technologies", "Kevin Ross"]
     minimum = "1.3"
@@ -148,55 +152,10 @@ class SuspiciousCommandTools(Signature):
 
     def run(self):
         utilities = [
-            "accesschk",
-            "accessenum",
-            "adexplorer",
-            "adinsight",
-            "adrestore",
-            "autologon",
             "autoruns",
-            "bcdedit",
-            "bitsadmin",
-            "bginfo",
-            "cacls",
-            "certutil",
-            "csvde",
-            "del ",
-            "del.exe",
-            "dsquery",
-            "icacls",
-            "klist",
-            "net ",
-            "net.exe",
+            "autologon",
             "psexec",
-            "psfile",
-            "psgetsid",
-            "psinfo",
-            "psping",
-            "pskill",
-            "pslist",
-            "psloggedon",
-            "psloglist",
-            "pspasswd",
-            "psservice",
-            "psshutdown",
-            "pssuspend",
-            "rd ",
-            "rd.exe",
-            "rexec",
-            "sc ",
-            "sc.exe",
-            "shareenum",
-            "shellrunas",
-            "takeown ",
-            "takeown.exe",
-            "taskkill",
-            "volumeid",
-            "vssadmin",
-            "wbadmin",
-            "wevtutil",
-            "whois",
-            "xcacls",
+            "rexec"
         ]
 
         whitelist = [

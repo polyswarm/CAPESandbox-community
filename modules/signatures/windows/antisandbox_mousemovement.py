@@ -48,6 +48,7 @@ class MouseMovementDetect(Signature):
             "outlook.exe",
             "powerpnt.exe",
             "winword.exe",
+            "explorer.exe",
         ]
 
     def on_call(self, call, process):

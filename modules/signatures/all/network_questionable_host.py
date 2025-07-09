@@ -33,7 +33,6 @@ RBLs = (
     "noserver.dnsbl.sorbs.net",
     "escalations.dnsbl.sorbs.net",
     "noserver.dnsbl.sorbs.net",
-    "zen.spamhaus.org",
 )
 
 resolver = dns.resolver.Resolver()
@@ -49,9 +48,7 @@ class NetworkQuestionableHost(Signature):
     authors = ["Zane C. Bowers-Hadley"]
     minimum = "1.3"
     mbcs = ["B0030"]
-    enabled = False
-
-    filter_analysistypes = set(["file"])
+    enabled = True
 
     def run(self):
         checked = []
@@ -60,6 +57,7 @@ class NetworkQuestionableHost(Signature):
                 ip = host[value]
                 if ip.startswith(("10.", "172.16.", "192.168.")) or ip in checked:
                     continue
+                checked.append(ip)
                 ipRev = ".".join(ip.split(".")[::-1])
                 for rbl in RBLs:
                     with suppress(Exception):

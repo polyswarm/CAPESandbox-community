@@ -26,6 +26,8 @@ class ReadsMemoryRemoteProcess(Signature):
     evented = True
 
     filter_apinames = set(["ReadProcessMemory"])
+    safeproclist = ["explorer.exe", "adobe crash processor.exe", "Acrobat.exe", "CRWindowsClientService.exe",
+                    "adnotificationmanager.exe"]
 
     def __init__(self, *args, **kwargs):
         Signature.__init__(self, *args, **kwargs)
@@ -41,7 +43,8 @@ class ReadsMemoryRemoteProcess(Signature):
             if len(buf) > 0:
                 pname = process["process_name"].lower()
                 processid = process["process_id"]
-                if processid not in self.sourcepids and prochandle not in self.targethandles:
+                if processid not in self.sourcepids and prochandle not in self.targethandles\
+                        and pname not in self.safeproclist:
                     self.data.append(
                         {
                             "read_memory": "Process %s with process ID %s read from the memory of process handle %s"
@@ -50,8 +53,8 @@ class ReadsMemoryRemoteProcess(Signature):
                     )
                     self.sourcepids.append(processid)
                     self.targethandles.append(prochandle)
-                self.mark_call()
-                self.ret = True
+                    self.mark_call()
+                    self.ret = True
 
     def on_complete(self):
         return self.ret

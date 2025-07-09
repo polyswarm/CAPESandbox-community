@@ -21,16 +21,16 @@ from lib.cuckoo.common.abstracts import Signature
 class suspiciousHRML_Body(Signature):
     name = "suspicious_html_body"
     description = "Sample contains suspicious HTML body"
-    severity = 1
+    severity = 3
     confidence = 100
     categories = ["phishing", "static"]
     authors = ["Yasin Tas", "Eye Security"]
     references = [
         "https://securelist.com/phishing-kit-market-whats-inside-off-the-shelf-phishing-packages/106149/",
-        "https://socradar.io/what-is-a-phishing-kit/" "https://github.com/SteveD3/kit_hunter/tree/master/tag_files",
+        "https://github.com/0xDanielLopez/phishing_kits", "https://socradar.io/what-is-a-phishing-kit/",
+        "https://github.com/SteveD3/kit_hunter/tree/master/tag_files",
     ]
     enabled = True
-    evented = True
     minimum = "1.2"
     ttps = ["T1566.001"]  # MITRE v6,7,8
     mbcs = ["C0029.003"]  # micro-behaviour
@@ -38,29 +38,38 @@ class suspiciousHRML_Body(Signature):
     def run(self):
         packages = ["html", "edge", "chrome", "firefox"]
         indicators = [
-            "password",
-            "email",
-            "username",
             "encoded_string",
-            "url",
             "// remove email, and put ur mailer code",
-            "headers" "tokenName",
-            "headers",
+            "eval",
+            "atob",
+            "btoa",
+            "decodeURIComponent",
+            "cardnumber",
+            "expirationdate",
+            "securitycode",
+            "api.telegram.org",
+            "YOUR_BOT_TOKEN",
+            "YOUR_CHANNEL_ID",
+            "telegramApiUrl",
+            "1TAO UY1 EMPR3",
+            "createElement(\"script\")"
         ]
+        has_match = False
         if self.results["info"]["package"] in packages:
             if "strings" in self.results["target"]["file"]:
                 strings = self.results["target"]["file"]["strings"]
-                data = "".join(strings)
+                data = "".join(strings) if strings else self.results["target"]["file"]["data"]
                 for indicator in indicators:
                     if indicator in data:
-                        self.add_match(None, "string", f"Found {indicator} in HTML body")
-        return self.has_matches()
+                        self.data.append({"indicator": indicator})
+                        has_match = True
+        return has_match
 
 
 class suspiciousHTML_Title(Signature):
     name = "suspicious_html_title"
     description = "Sample contains suspicious HTML title"
-    severity = 1
+    severity = 3
     confidence = 100
     categories = ["phishing", "static"]
     authors = ["Yasin Tas", "Eye Security"]
@@ -84,27 +93,29 @@ class suspiciousHTML_Title(Signature):
         ]
 
         title_regex = re.compile(r"<\s*title[^>]*>(.*?)<\/\s*title\s*>")
+        has_match = False
 
         if self.results["info"]["package"] in packages:
             if "strings" in self.results["target"]["file"]:
                 strings = self.results["target"]["file"]["strings"]
-                data = "".join(strings)
+                data = "".join(strings) if strings else self.results["target"]["file"]["data"]
                 title = title_regex.search(data)
                 if not title:
-                    self.description = "Sample contains empty HTML title"
-                    self.add_match(None, "string", "Empty HTML title")
+                    self.data.append({"indicator": "empty", "location": "title"})
+                    has_match = True
                 else:
                     for indicator in indicators:
                         if indicator in title.group(1):
-                            self.add_match(None, "string", f"Found {indicator} in HTML title")
+                            self.data.append({"indicator": indicator, "location": "title"})
+                            has_match = True
 
-        return self.has_matches()
+        return has_match
 
 
 class suspiciousHTML_Filename(Signature):
     name = "suspicious_html_name"
     description = "Sample contains suspicious HTML name"
-    severity = 1
+    severity = 3
     confidence = 80
     categories = ["phishing", "static"]
     authors = ["Yasin Tas", "Eye Security"]
@@ -122,18 +133,36 @@ class suspiciousHTML_Filename(Signature):
         indicators = [
             "payment",
             "remittence",
-            "remmitance " "invoice",
+            "remmitance ",
+            "invoice",
             "inv",
             "voicemail",
             "remit",
             "voice",
             "statement",
+            "RECEIPT",
+            "delivery",
+            "company",
+            "agreements",
+            "biometrics",
+            "audio",
+            "social",
+            "security",
+            "credit",
+            "confidential",
+            "transfer",
+            "funds",
+            "coin",
+            "play",
+            "recording",
         ]
+        has_match = False
 
         if self.results["info"]["package"] in packages:
             name = self.results["target"]["file"]["name"]
             lower = name.lower()
             for indicator in indicators:
                 if indicator in lower:
-                    self.add_match(None, "string", f"Found {indicator} in HTML name")
-        return self.has_matches()
+                    self.data.append({"indicator": indicator, 'location': 'filename'})
+                    has_match = True
+        return has_match

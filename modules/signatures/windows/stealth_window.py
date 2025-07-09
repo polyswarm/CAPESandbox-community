@@ -32,6 +32,8 @@ class Hidden_Window(Signature):
     ttps = ["T1143"]  # MITRE v6
     ttps += ["T1564", "T1564.003"]  # MITRE v7,8
     mbcs = ["E1564"]
+    confidence = 30
+    safeproclist = ["Acrobat.exe"]
 
     filter_apinames = set(["ShellExecuteExW", "CreateProcessInternalW"])
 
@@ -40,6 +42,9 @@ class Hidden_Window(Signature):
         self.hidden = list()
 
     def on_call(self, call, process):
+        if process['process_name'] in self.safeproclist:
+            return
+
         if call["api"] == "CreateProcessInternalW":
             clbuf = self.get_argument(call, "CommandLine").lower()
             cfbuf = int(self.get_argument(call, "CreationFlags"), 16)
