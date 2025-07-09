@@ -33,7 +33,7 @@ class Hidden_Window(Signature):
     ttps += ["T1564", "T1564.003"]  # MITRE v7,8
     mbcs = ["E1564"]
     confidence = 30
-    safeproclist = ["Acrobat.exe"]
+    safeproclist = ["Acrobat.exe", "CRWindowsClientService.exe", "CRLogTransport.exe"]
 
     filter_apinames = set(["ShellExecuteExW", "CreateProcessInternalW"])
 
