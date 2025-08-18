@@ -40,6 +40,8 @@ class ThreadManipulationRemoteProcess(Signature):
         "trustedinstaller.exe",
         "adobe crash processor.exe",
         "acrocef.exe",
+        "outlook.exe",
+        "setup.exe",
     ]
 
     def __init__(self, *args, **kwargs):

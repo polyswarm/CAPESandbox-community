@@ -42,7 +42,7 @@ class Hidden_Window(Signature):
         self.hidden = list()
 
     def on_call(self, call, process):
-        if process['process_name'] in self.safeproclist:
+        if process['process_name'] in self.safeproclist or 'Microsoft' in process['process_name']:
             return
 
         if call["api"] == "CreateProcessInternalW":

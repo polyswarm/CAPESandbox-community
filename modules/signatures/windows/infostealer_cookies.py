@@ -56,7 +56,8 @@ class CookiesStealer(Signature):
             "adnotificationmanager.exe",
             "mousocoreworker.exe",
             "adobe crash processor.exe",
-            "adobearm.exe"
+            "adobearm.exe",
+            "outlook.exe",
         ]
         self.ret = False
 

@@ -33,6 +33,7 @@ class TerminatesRemoteProcess(Signature):
         "acrobat.exe",
         "acrocef.exe",
         "services.exe",
+        "setup.exe"
     ]
 
     filter_apinames = set(["NtTerminateProcess"])

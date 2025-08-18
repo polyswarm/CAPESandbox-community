@@ -50,6 +50,8 @@ class RansomwareFileModifications(Signature):
     ]
     whitelist_regex = [
         r"microsoftedgeupdatesetup_x86"
+        r"msedge"
+        r"office"
     ]
 
     def __init__(self, *args, **kwargs):
