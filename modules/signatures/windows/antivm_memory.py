@@ -32,7 +32,7 @@ class AntiVMChecksAvailableMemory(Signature):
     def __init__(self, *args, **kwargs):
         Signature.__init__(self, *args, **kwargs)
         self.ret = False
-        self.process_safelist = ["microsoftedgeupdate.exe", "winword.exe"]
+        self.process_safelist = ["microsoftedgeupdate.exe", "winword.exe", "outlook.exe"]
 
     def on_call(self, call, process):
         if process.get("process_name", "").lower() in self.process_safelist:
