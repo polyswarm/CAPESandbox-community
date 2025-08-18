@@ -50,7 +50,7 @@ class DiskInformation(Signature):
         ]
 
     def on_call(self, call, process):
-        if process["process_name"].lower() in self.office_proc_list:
+        if process["process_name"].lower() in self.office_proc_list or 'MicrosoftEdge' in process["process_name"]:
             return False
 
         ioctls = [
