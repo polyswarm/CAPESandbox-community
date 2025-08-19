@@ -37,7 +37,7 @@ class HTMLPhisher_0(Signature):
     ttps += ["T1566.001"]  # MITRE v6,7,8
     ttps += ["T1606"]  # MITRE v7,8
     mbcs = ["C0029.003"]  # micro-behaviour
-    packages = ["html", "edge", "chrome", "firefox"]
+    packages = ["html", "edge", "chrome", "firefox", "eml"]
 
     def run(self):
         has_match = False
@@ -86,7 +86,7 @@ class HTMLPhisher_1(Signature):
     ttps += ["T1566.001"]  # MITRE v6,7,8
     ttps += ["T1606"]  # MITRE v7,8
     mbcs = ["C0029.003"]  # micro-behaviour
-    packages = ["html", "edge", "chrome", "firefox"]
+    packages = ["html", "edge", "chrome", "firefox", "eml"]
 
     def run(self):
         has_match = False
@@ -146,7 +146,7 @@ class HTMLPhisher_2(Signature):
 
     def run(self):
         has_match = False
-        packages = ["html", "edge", "chrome", "firefox"]
+        packages = ["html", "edge", "chrome", "firefox", "eml"]
 
         if self.results["info"]["package"] in packages:
             strings = self.results["target"]["file"]["strings"]
