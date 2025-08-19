@@ -52,6 +52,7 @@ class LanguageCheckReg(Signature):
     authors = ["Kevin Ross"]
     minimum = "1.3"
     ttps = ["T1614", "T1627"]  # MITRE v6,7,8
+    weight = 0
 
     def run(self):
         ret = False
@@ -77,6 +78,7 @@ class QueriesLocaleAPI(Signature):
     minimum = "1.3"
     evented = True
     ttps = ["T1614", "T1627"]  # MITRE v6,7,8
+    weight = 0
 
     filter_apinames = set(["GetUserDefaultLCID", "GetUserDefaultLocaleName"])
 

@@ -47,9 +47,13 @@ class RansomwareFileModifications(Signature):
         "adobecollabsync.exe",
         "trustedinstaller.exe",
         "adobe crash processor.exe",
+        "outlook.exe",
+        "setup.exe",
     ]
     whitelist_regex = [
         r"microsoftedgeupdatesetup_x86"
+        r"msedge"
+        r"office"
     ]
 
     def __init__(self, *args, **kwargs):

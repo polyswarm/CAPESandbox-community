@@ -47,6 +47,7 @@ class AntiVMSystem(Signature):
             "outlook.exe",
             "acrord32.exe",
             "acrord64.exe",
+            "setup.exe",
         ]
 
     def on_call(self, call, process):

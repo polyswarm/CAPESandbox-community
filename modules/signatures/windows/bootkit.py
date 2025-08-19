@@ -282,8 +282,25 @@ class SuspiciusIOControlCodes(Signature):
             "0x00220400",  # IOCTL_DISK_GET_DRIVE_LAYOUT_EX - Used to get drive layout, can be used to understand disk partitioning
             "0x00220C00",  # IOCTL_DISK_SET_DRIVE_LAYOUT_EX - Used to set drive layout, potentially for malicious partitioning
         ]
+        self.safeproclist = [
+            "svchost.exe",
+            "services.exe",
+            "acrobat.exe",
+            "explorer.exe",
+            "microsoftedgeupdate.exe",
+            "werfault.exe",
+            "taskhostw.exe",
+            "mousocoreworker.exe",
+            "adobecollabsync.exe",
+            "trustedinstaller.exe",
+            "adobe crash processor.exe"
+            "outlook.exe",
+            "setup.exe"
+        ]
 
     def on_call(self, call, process):
+        if process['process_name'].lower() in self.safeproclist or 'Microsoft' in process['process_name']:
+            return
         controlcode = self.get_argument(call, "IoControlCode")
         if controlcode in self.suspiciouscontrolcodes:
             self.mark_call()

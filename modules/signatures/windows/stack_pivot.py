@@ -53,7 +53,6 @@ class StackPivot(Signature):
             "HimTrayIcon.exe",
             "hwp.exe",
             "iexplore.exe",
-            "outlook.exe",
         ]
 
     def on_call(self, call, process):

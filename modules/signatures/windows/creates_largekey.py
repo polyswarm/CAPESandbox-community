@@ -47,6 +47,8 @@ class CreatesLargeKey(Signature):
             "adobecollabsync.exe",
             "trustedinstaller.exe",
             "adobe crash processor.exe"
+            "outlook.exe",
+            "setup.exe"
         ]
 
     def on_call(self, call, process):

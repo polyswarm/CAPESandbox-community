@@ -30,7 +30,10 @@ class DeletesExecutedFiles(Signature):
 
     def run(self):
         cmdlines = self.results.get("behavior", {}).get("summary", {}).get("executed_commands", [])
-        whitelist_paths = ["C:\\Program Files (x86)\\Microsoft\\Temp"]
+        whitelist_paths = [
+            "C:\\Program Files (x86)\\Microsoft\\Temp",
+            "C:\\Program Files (x86)\\Microsoft\\EdgeUpdate\\"
+        ]
 
         if cmdlines:
             for deletedfile in self.results.get("behavior", {}).get("summary", {}).get("delete_files", []):
