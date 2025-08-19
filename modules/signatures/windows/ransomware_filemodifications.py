@@ -47,6 +47,8 @@ class RansomwareFileModifications(Signature):
         "adobecollabsync.exe",
         "trustedinstaller.exe",
         "adobe crash processor.exe",
+        "outlook.exe",
+        "setup.exe",
     ]
     whitelist_regex = [
         r"microsoftedgeupdatesetup_x86"

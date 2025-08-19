@@ -42,7 +42,8 @@ class Unhook(Signature):
         self.safelistprocs = ["acrord32.exe", "acrobat.exe", "excel.exe", "winword.exe", "powerpnt.exe", "outlook.exe",
                               "microsoftedgeupdate.exe", "explorer.exe", "mousocoreworker.exe", "adobearm.exe"
                               "adnotificationmanager.ex", "crwindowsclientservice.exe", "adobe crash processor.exe",
-                              "services.exe", "acrobat_sl.exe", "wmiprvse.exe", "adobecollabsync.exe", "taskhostw.exe"]
+                              "services.exe", "acrobat_sl.exe", "wmiprvse.exe", "adobecollabsync.exe", "taskhostw.exe",
+                              "setup.exe"]
 
     def on_call(self, call, process):
         if process["process_name"].lower() in self.safelistprocs:
