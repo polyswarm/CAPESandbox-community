@@ -36,7 +36,7 @@ class suspiciousHRML_Body(Signature):
     mbcs = ["C0029.003"]  # micro-behaviour
 
     def run(self):
-        packages = ["html", "edge", "chrome", "firefox"]
+        packages = ["html", "edge", "chrome", "firefox", "eml"]
         indicators = [
             "encoded_string",
             "// remove email, and put ur mailer code",
@@ -84,7 +84,7 @@ class suspiciousHTML_Title(Signature):
 
     def run(self):
 
-        packages = ["html", "edge", "chrome", "firefox"]
+        packages = ["html", "edge", "chrome", "firefox", "eml"]
         indicators = [
             "Please wait",
             "Sign in",
@@ -129,7 +129,7 @@ class suspiciousHTML_Filename(Signature):
     mbcs = ["C0029.003"]  # micro-behaviour
 
     def run(self):
-        packages = ["html", "edge", "chrome", "firefox"]
+        packages = ["html", "edge", "chrome", "firefox", "eml"]
         indicators = [
             "payment",
             "remittence",
