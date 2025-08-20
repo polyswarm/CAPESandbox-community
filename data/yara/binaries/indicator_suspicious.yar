@@ -336,19 +336,38 @@ rule INDICATOR_SUSPICIOUS_EXE_SQLQuery_ConfidentialDataStore {
         description = "Detects executables containing SQL queries to confidential data stores. Observed in infostealers"
     strings:
         $select = "select " ascii wide nocase
-        $table1 = " from credit_cards" ascii wide nocase
-        $table2 = " from logins" ascii wide nocase
-        $table3 = " from cookies" ascii wide nocase
-        $table4 = " from moz_cookies" ascii wide nocase
-        $table5 = " from moz_formhistory" ascii wide nocase
-        $table6 = " from moz_logins" ascii wide nocase
+        $from = " from " ascii wide nocase
+
+        $table1 = "credit_cards" ascii wide nocase
+        $table2 = "logins" ascii wide nocase
+        $table3 = "cookies" ascii wide nocase
+        $table4 = "moz_cookies" ascii wide nocase
+        $table5 = "moz_formhistory" ascii wide nocase
+        $table6 = "moz_logins" ascii wide nocase
+
         $column1 = "name" ascii wide nocase
         $column2 = "password_value" ascii wide nocase
         $column3 = "encrypted_value" ascii wide nocase
         $column4 = "card_number_encrypted" ascii wide nocase
         $column5 = "isHttpOnly" ascii wide nocase
+
+        $s1 = "select * from credit_cards" ascii wide nocase
+        $s2 = "select * from logins" ascii wide nocase
+        $s3 = "select * from cookies" ascii wide nocase
+        $s4 = "select name, password_value" ascii wide nocase
+        $s5 = "select encrypted_value from moz_cookies" ascii wide nocase
+        $s6 = "select card_number_encrypted from credit_cards" ascii wide nocase
+        $s7 = "select password_value from logins" ascii wide nocase
+        $s8 = "select name from moz_logins" ascii wide nocase
+
     condition:
-        uint16(0) == 0x5a4d and 2 of ($table*) and 2 of ($column*) and $select
+        uint16(0) == 0x5a4d and (
+            3 of ($s*) or // Prioritize specific, strong indicators
+            (
+                $select and $from and
+                (3 of ($table*) and 3 of ($column*))
+            )
+        )
 }
 
 rule INDICATOR_SUSPICIOUS_PWSH_B64Encoded_Concatenated_FileEXEC {

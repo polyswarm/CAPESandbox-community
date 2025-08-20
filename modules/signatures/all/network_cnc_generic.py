@@ -58,8 +58,6 @@ class NetworkCountryDistribution(Signature):
     minimum = "1.3"
     mbcs = ["B0030"]
 
-    filter_analysistypes = set(["file"])
-
     def run(self):
         countries = []
         for host in self.results.get("network", {}).get("hosts", []):
@@ -86,8 +84,6 @@ class NetworkMultipleDirectIPConnections(Signature):
     authors = ["Kevin Ross", "Wassime BATTA"]
     minimum = "1.3"
     enabled = False
-
-    filter_analysistypes = set(["file"])
 
     def run(self):
         if not HAVE_MSFT_PUB_IPS or not ip_ranges:

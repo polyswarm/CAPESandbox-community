@@ -25,14 +25,18 @@ class QueriesKeyboardLayout(Signature):
     minimum = "1.3"
     evented = True
     ttps = ["T1614"]  # MITRE v6,7,8
+    confidence = 20
 
     filter_apinames = set(["GetKeyboardLayout"])
 
     def __init__(self, *args, **kwargs):
         Signature.__init__(self, *args, **kwargs)
         self.ret = False
+        self.process_safelist = ["microsoftedgeupdate.exe", "winword.exe"]
 
     def on_call(self, call, process):
+        if process.get("process_name", "").lower() in self.process_safelist:
+            return False
         self.mark_call()
         self.ret = True
 
@@ -48,6 +52,7 @@ class LanguageCheckReg(Signature):
     authors = ["Kevin Ross"]
     minimum = "1.3"
     ttps = ["T1614", "T1627"]  # MITRE v6,7,8
+    weight = 0
 
     def run(self):
         ret = False
@@ -73,6 +78,7 @@ class QueriesLocaleAPI(Signature):
     minimum = "1.3"
     evented = True
     ttps = ["T1614", "T1627"]  # MITRE v6,7,8
+    weight = 0
 
     filter_apinames = set(["GetUserDefaultLCID", "GetUserDefaultLocaleName"])
 

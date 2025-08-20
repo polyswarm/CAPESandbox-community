@@ -18,8 +18,11 @@ class KeyLogger(Signature):
     mbcs = ["OB0003", "F0002", "F0002.001", "F0015", "F0015.007"]
 
     filter_apinames = set(["SetWindowsHookExA", "SetWindowsHookExW", "GetAsyncKeyState"])
+    safelistprocs = ["explorer.exe"]
 
     def on_call(self, call, process):
+        if process and process.get('process_name') in self.safelistprocs:
+            return False
         if call["api"] == "GetAsyncKeyState":
             # avoid an IE false positive
             keycode = int(self.get_argument(call, "KeyCode"), 10)

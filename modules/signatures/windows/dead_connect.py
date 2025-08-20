@@ -25,6 +25,8 @@ class DeadConnect(Signature):
     authors = ["KillerInstinct"]
     minimum = "1.0"
     evented = True
+    confidence = 40
+    enabled = False
 
     filter_apinames = set(["connect", "ConnectEx", "WSAConnect", "WSAConnectByList"])
 

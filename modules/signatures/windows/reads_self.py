@@ -79,6 +79,7 @@ class ReadsSelf(Signature):
 
     filter_analysistypes = set(["file"])
     filter_apinames = set(["NtOpenFile", "NtCreateFile", "NtClose", "NtReadFile", "NtSetInformationFile"])
+    safeproclist = ["Acrobat.exe"]
 
     def __init__(self, *args, **kwargs):
         Signature.__init__(self, *args, **kwargs)
@@ -94,6 +95,9 @@ class ReadsSelf(Signature):
         FilePositionInformation = 14
 
         if self.is_office:
+            return False
+
+        if process["process_name"] in self.safeproclist:
             return False
 
         if process is not self.lastprocess:

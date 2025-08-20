@@ -172,6 +172,9 @@ class Autorun(Signature):
             r".*\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User\ Shell\ Folders\\Startup$",
         )
         whitelists = [
+            ".*\\\\Software\\\\(Wow6432Node\\\\)?Classes\\\\clsid\\\\{CAFEEFAC-0017-0000-FFFF-ABCDEFFEDCBA}\\\\InprocServer32\\\\.*",
+            ".*\\\\Software\\\\Classes\\\\CLSID\\\\{38142727-3008-9161-1521-349515000000}\\\\LocalServer32\\\\.*",
+            # ".*\\\\Software\\\\(Wow6432Node\\\\)?Classes\\\\clsid\\\\[^\\\\]*\\\\InprocServer32\\\\ThreadingModel$",
             r".*\\Software\\(Wow6432Node\\)?Classes\\clsid\\{CAFEEFAC-0017-0000-FFFF-ABCDEFFEDCBA}\\InprocServer32\\.*",
             # r".*\\Software\\(Wow6432Node\\)?Classes\\clsid\\[^\\]*\\InprocServer32\\ThreadingModel$",
         ]
